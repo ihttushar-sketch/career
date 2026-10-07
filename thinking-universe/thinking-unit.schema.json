@@ -1,0 +1,325 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Thinking Unit",
+  "description": "The publishable content contract for one concept inside the Tushar Thinking Universe. One Markdown/MDX file per unit: YAML front matter holds these keys. Two fields - deep_article and linkedin_caption - are normally stored as markdown body sections (see x_body_fields) instead of front matter; a validator must accept either location. Required keys must never be filled by AI with invented author beliefs; use the literal string NEEDS_AUTHOR_INPUT instead.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "concept_id",
+    "world_id",
+    "concept_number",
+    "title",
+    "hook",
+    "core_thesis",
+    "original_thought",
+    "simple_breakdown",
+    "framework",
+    "quote",
+    "cta",
+    "hashtags",
+    "visual_concepts",
+    "status"
+  ],
+  "properties": {
+    "concept_id": {
+      "type": "string",
+      "description": "kebab-case slug, e.g. logo-not-equal-brand"
+    },
+    "world_id": {
+      "type": "string",
+      "description": "must exist in thinking-core world_registry, e.g. brand-thinking"
+    },
+    "world_label": {
+      "type": "string"
+    },
+    "concept_number": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 500
+    },
+    "series_label": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string",
+      "description": "usually an X ≠ Y contradiction"
+    },
+    "title_en": {
+      "type": "string"
+    },
+    "title_bn": {
+      "type": "string"
+    },
+    "hook": {
+      "type": "string",
+      "description": "one line, IMAGE-level strength, stops the scroll"
+    },
+    "hook_alt": {
+      "type": "string"
+    },
+    "core_thesis": {
+      "type": "string",
+      "description": "AUTHOR VOICE. Never AI-invented."
+    },
+    "original_thought": {
+      "type": "string",
+      "description": "AUTHOR VOICE, verbatim raw input if available."
+    },
+    "contrarian_angle": {
+      "type": "string",
+      "description": "what most people believe vs what the author sees"
+    },
+    "simple_breakdown": {
+      "type": "string",
+      "description": "short explanation, 2-4 lines, plain Banglish"
+    },
+    "framework": {
+      "type": "string",
+      "description": "arrow chain, e.g. LOGO → SYSTEM → EXPERIENCE → PERCEPTION"
+    },
+    "framework_steps": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 3,
+      "maxItems": 7
+    },
+    "deep_article": {
+      "type": "string",
+      "description": "1000-2000+ words. Sections: Problem, Common belief, Observation, Argument, Breakdown, Example, Counter-example, Business implication, Marketing implication, Brand implication, Conclusion."
+    },
+    "real_life_example": {
+      "type": "string"
+    },
+    "business_example": {
+      "type": "string"
+    },
+    "marketing_implication": {
+      "type": "string"
+    },
+    "brand_implication": {
+      "type": "string"
+    },
+    "visual_concepts": {
+      "type": "array",
+      "minItems": 4,
+      "maxItems": 5,
+      "description": "01 Hero, 02 Explanation, 03 Real-life, 04 Business/Application, 05 Quote/Thought",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "slot",
+          "purpose",
+          "prompt"
+        ],
+        "properties": {
+          "slot": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 5
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "hero",
+              "explanation",
+              "real-life",
+              "business",
+              "quote"
+            ]
+          },
+          "purpose": {
+            "type": "string"
+          },
+          "headline_on_image": {
+            "type": "string",
+            "description": "max ~8 words; 1 strong headline + minimal support text only"
+          },
+          "prompt": {
+            "type": "string",
+            "description": "full text-to-image prompt, production ready"
+          },
+          "asset_path": {
+            "type": "string",
+            "description": "filled once rendered"
+          }
+        }
+      }
+    },
+    "linkedin_caption": {
+      "type": "string"
+    },
+    "facebook_caption": {
+      "type": "string"
+    },
+    "carousel_outline": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "maxItems": 10
+    },
+    "quote": {
+      "type": "string",
+      "description": "AUTHOR VOICE. The strongest single line of the unit."
+    },
+    "cta": {
+      "type": "string",
+      "description": "subtle signature or discussion question; never aggressive sales copy"
+    },
+    "hashtags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 3,
+      "maxItems": 5
+    },
+    "related_concepts": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "concept ids, may cross worlds"
+    },
+    "related_worlds": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "world_theme": {
+      "type": "string",
+      "description": "per-world visual identity token"
+    },
+    "depth_levels_ready": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "content depth system: image=5-10s, caption=30-60s, short=2-3m, article=5-10m, connected thinking",
+      "properties": {
+        "visual": {
+          "type": "boolean"
+        },
+        "social_caption": {
+          "type": "boolean"
+        },
+        "short_explanation": {
+          "type": "boolean"
+        },
+        "deep_article": {
+          "type": "boolean"
+        },
+        "connected_thinking": {
+          "type": "boolean"
+        }
+      }
+    },
+    "author_signature": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "default": "Md Ilias Hossain Tushar"
+        },
+        "role": {
+          "type": "string",
+          "default": "Brand Marketing Strategist"
+        },
+        "website": {
+          "type": "string",
+          "default": "www.iliashossain.site"
+        },
+        "email": {
+          "type": "string",
+          "default": "mail@iliashossain.site"
+        },
+        "phone": {
+          "type": "string",
+          "default": "01701076173"
+        }
+      }
+    },
+    "quality_checks": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "the 8 checks from master doc section 30",
+      "properties": {
+        "authenticity": {
+          "type": "boolean"
+        },
+        "clarity": {
+          "type": "boolean"
+        },
+        "depth": {
+          "type": "boolean"
+        },
+        "distinction": {
+          "type": "boolean"
+        },
+        "strategic_value": {
+          "type": "boolean"
+        },
+        "visual_value": {
+          "type": "boolean"
+        },
+        "cross_linking": {
+          "type": "boolean"
+        },
+        "personal_brand_consistency": {
+          "type": "boolean"
+        }
+      }
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "idea",
+        "draft",
+        "needs_author_input",
+        "approved",
+        "published"
+      ]
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date"
+    },
+    "cluster": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 6,
+      "description": "expansion cluster used for world page filters and build order"
+    },
+    "common_belief": {
+      "type": "string",
+      "description": "the misbelief the concept argues against, stated fairly"
+    },
+    "expanded_by": {
+      "type": "string",
+      "description": "provenance: which engine/version structured the authored fields"
+    },
+    "reviewed_by": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "author sign-off; null until approved by hand"
+    }
+  },
+  "x_body_fields": {
+    "deep_article": "## Deep Article",
+    "linkedin_caption": "## LinkedIn Caption",
+    "quote": null,
+    "real_life_example": "## Real-life Example",
+    "business_example": "## Business Application"
+  },
+  "x_body_fields_note": "Front matter wins. If absent there, the validator resolves the key from the matching '## ' section in the body.",
+  "x_note_fields_removed_from_required": "resolvable from body headings; validate presence in either location"
+}
