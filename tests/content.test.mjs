@@ -15,6 +15,10 @@ import {
   unitsByWorld,
   author,
 } from '../lib/content.mjs';
+import { snapshotContent, restoreContent } from './support.mjs';
+
+const snap = snapshotContent();
+test.after(() => restoreContent(snap));
 
 const ROOT = process.cwd();
 

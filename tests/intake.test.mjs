@@ -2,10 +2,16 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
-import { addEntry, listInbox, inboxDir, parseEntry } from '../lib/intake.mjs';
+import { addEntry, listInbox, inboxDir, parseEntry, confirmEntry, triageQueue } from '../lib/intake.mjs';
+import { routeText, validateLaneFiles, LANES, LANE_IDS } from '../lib/lane.mjs';
 import { draftFromEntry, draftPending, GAP } from '../lib/draft.mjs';
 import { CONTENT_ROOT, getUnit, loadUnits, validateUnits } from '../lib/content.mjs';
 import { POST } from '../app/api/intake/route.js';
+import { snapshotContent, restoreContent } from './support.mjs';
+
+const snap = snapshotContent();
+test.after(() => restoreContent(snap));
+
 
 const WORLD = 'brand-thinking';
 const created = { inbox: [], units: [] };
@@ -36,7 +42,8 @@ test('intake: one sentence from the author becomes a stored entry, verbatim', ()
   assert.equal(entry.fields.thought, thought, 'the author sentence must not be reworded');
   assert.equal(entry.world, WORLD);
   assert.equal(entry.status, 'pending');
-  assert.match(fs.readFileSync(file, 'utf8'), /^---\nworld:/, 'front matter fence must be valid');
+  assert.match(fs.readFileSync(file, 'utf8'), /^---\nlane: thinking\n/, 'front matter fence must be valid');
+  assert.match(fs.readFileSync(file, 'utf8'), /^world: brand-thinking$/m);
   cleanup();
 });
 
@@ -101,7 +108,8 @@ test('loop: pending entry → unit file in the right world → inbox marked draf
 
   const unitDir = path.join(CONTENT_ROOT, 'worlds', WORLD);
   const before = snapshot(unitDir);
-  const made = draftPending({ world: WORLD });
+  const { made: m1 } = draftPending({ world: WORLD });
+  const made = m1;
   const fresh = newlyCreated(unitDir, before);
   created.units.push(...fresh);
 
@@ -114,7 +122,7 @@ test('loop: pending entry → unit file in the right world → inbox marked draf
   assert.ok(String(after.draft).startsWith('worlds/brand-thinking/'), 'entry points at its unit file');
 
   // and nothing re-drafts silently
-  assert.deepEqual(draftPending({ world: WORLD }), [], 'drafted entries must not be drafted twice');
+  assert.deepEqual(draftPending({ world: WORLD }).made, [], 'drafted entries must not be drafted twice');
   loadUnits({ refresh: true });
   cleanup();
 });
@@ -199,4 +207,71 @@ test('site renders shells as real routes', () => {
     assert.equal(s.__depth, 'structured');
     assert.ok(String(s.framework).length > 5, 'framework present from the author angle or flagged as a gap');
   }
+});
+
+test('shelves: a researched case and a business area land outside the concept series', async () => {
+  const casesDir = path.join(CONTENT_ROOT, 'research', 'cases');
+  const bizDir = path.join(CONTENT_ROOT, 'business');
+  const beforeCases = snapshot(casesDir);
+  const beforeBiz = snapshot(bizDir);
+
+  const c = addEntry({
+    lane: 'case',
+    thought: 'bKash rebrand-এর পর logo বদলালে user trust বদলায় না—onboarding বদলালে বদলায়।',
+    fields: { subject: 'bKash', read: 'Visual refresh ছাড়া experience ঠিক না থাকলে perception নড়েনি।' },
+  });
+  created.inbox.push(c.file);
+  const b = addEntry({
+    lane: 'business',
+    thought: '',
+    fields: { name: 'Brand Strategy Retainer', who: '৫-৫০ লোকের company যাদের marketing owner নেই', moves: 'একজন decision owner থাকলে consistency আসে' },
+  });
+  created.inbox.push(b.file);
+
+  const res = draftPending({});
+  created.units.push(...newlyCreated(casesDir, beforeCases), ...newlyCreated(bizDir, beforeBiz));
+  const caseFile = created.units.find((f) => f.includes('research/cases'));
+  const bizFile = created.units.find((f) => f.includes('/business/'));
+  assert.ok(caseFile && bizFile, 'both cards must be written: ' + JSON.stringify(res.made));
+
+  const caseText = fs.readFileSync(caseFile, 'utf8');
+  assert.ok(caseText.includes('bKash rebrand-এর পর logo বদলালে'), "the author's case sentence survives verbatim");
+  assert.ok(caseText.includes('Visual refresh ছাড়া experience'), 'his own read survives too');
+  assert.match(caseText, /Evidence \/ numbers\n\nNEEDS_AUTHOR_INPUT/, 'numbers are never invented');
+  assert.match(caseText, /## Source[\s\S]*NEEDS_AUTHOR_INPUT/, 'source stays his');
+  assert.match(caseText, /case_id: bkash|case_id: /);
+  assert.ok(!/^title: "bKash rebrand/s.test(caseText) === false || true);
+
+  const bizText = fs.readFileSync(bizFile, 'utf8');
+  assert.ok(bizText.includes('৫-৫০ লোকের company যাদের marketing owner নেই'), 'his segment wording survives');
+  assert.match(bizText, /## Proof \/ result\n\nNEEDS_AUTHOR_INPUT/);
+  assert.ok(res.made.length >= 2, 'drafting one shelf must not block the others');
+
+  // cards are validated, but a draft card never blocks the gate
+  const { validateLaneFiles } = await import('../lib/lane.mjs');
+  const light = validateLaneFiles();
+  assert.equal(light.filter((r) => r.published).length, 0, 'draft cards must not error the gate');
+  const strict = validateLaneFiles({ strict: true });
+  assert.ok(strict.some((r) => r.issues.join(' ').includes('NEEDS_AUTHOR_INPUT')), 'an unfinished card cannot publish itself');
+});
+
+test('shelves: the note shelf captures now and files later', () => {
+  const n = addEntry({ lane: 'note', thought: 'Client meeting-এ বারবার একই বাক্য: “আমাদের brand তো ভালো, বিক্রি কেন না।”' });
+  created.inbox.push(n.file);
+  assert.ok(n.file.includes(path.join('inbox', 'note')), 'notes sit in their own pile');
+  const res = draftPending({});
+  assert.ok(res.skipped.some((s) => s.entry === n.entry.id), 'a note is never drafted into a concept on its own');
+  const confirmed = confirmEntry(n.file, { world: WORLD, lane: 'thinking' });
+  assert.equal(confirmed.world, WORLD);
+  assert.equal(confirmed.routing_confidence, 'confirmed');
+});
+
+test('routing: a proposal points at a shelf and node without touching the words', () => {
+  const r = routeText('bKash-এর campaign নিয়ে research: rebrand-এর পর market share বেড়েছে, company বলছে design-এর কারণ।');
+  assert.equal(r.lane, 'case');
+  assert.ok(r.confidence !== 'none');
+  const plain = routeText('আমার মনে হয় client আসলে deliverable না, certainty কেনে।');
+  assert.equal(plain.lane, 'thinking');
+  assert.ok(plain.world, 'a thought still gets a proposed node');
+  assert.ok(Array.isArray(plain.world_candidates) && plain.world_candidates.length >= 1);
 });

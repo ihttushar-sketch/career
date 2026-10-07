@@ -7,8 +7,9 @@ gated by tests.
 ```
 npm install
 npm run dev            # http://localhost:3000 → /intake adds thinking to any node
-npm run intake -- --add --world marketing-thinking --thought "…"
-npm run draft          # pending thoughts → unit shells (NEEDS_AUTHOR_INPUT marks the gaps)
+npm run intake -- --add --thought "…"        # any time: shelf + node are proposed, you confirm later
+npm run intake -- --triage                   # weekly: one click per capture
+npm run draft          # pending → unit shells / case cards / business cards (gaps stay yours)
 npm test               # 17 integrity tests
 npm run check          # publication gate (schema + publish rules)
 npm run build          # gate + 61 static pages
@@ -18,7 +19,9 @@ npm run build          # gate + 61 static pages
 
 | Path | Role |
 |------|------|
-| `/intake` | **the author's door for every node** — add a perception in the UI, it lands in that node's inbox |
+| `/intake` | **the author's door** — four shelves (thinking · cases · business · notes), auto-filing proposed, words untouched |
+| `/triage` | one click per capture: which shelf, which node — then `npm run draft` |
+| `/cases`, `/business` | the evidence and offer shelves as pages: a case without numbers can't be cited, an area without proof can't be sold |
 | `thinking-universe/inbox/<world>/` | pending thoughts, one file each; `npm run draft` turns them into shells |
 | `data/` | batch-authored concepts (Brand Thinking's 50) — 50 authored concepts (hook, thought, belief, thesis, framework, examples, counter-example, implications, quote, CTA, hero line, links) |
 | `scripts/build-content.mjs` | engine: authored fields → complete unit files (never overwrites hand edits) |

@@ -1945,3 +1945,94 @@ Run it: `npm run check` (day-to-day) · `npm run check:strict` (before shipping 
 * Brand Thinking — 50 approved, inbox empty, phase 07 = author sign-off (`reviewed_by`)
 * Marketing Thinking — **seeded**: 1 shell from the author's own sentence, 49 slots open
 * every other node — inbox open, waiting
+
+---
+
+# 40. THE MAIN NODE IS THE THINKER — FOUR SHELVES, ONE HABIT
+
+Everything before this section assumed the unit of the universe was a *topic*. It isn't. The main node is
+**Tushar** — one person, several kinds of raw material around him. Topics (Brand Thinking, Marketing
+Thinking, …) are only one of those kinds. So the universe now has four shelves, and each shelf has its own
+file shape, its own drafter and its own place in the site:
+
+```ntext
+                        ┌──────────────────────────────┐
+                        │   MAIN NODE: Md Ilias Hossain Tushar   │
+                        └──────────────┬───────────────┘
+        ┌──────────────────┬───────────┴───────┬────────────────────┐
+        │                  │                   │                    │
+   01 THINKING         02 CASES            03 BUSINESS           04 NOTES
+   your positions      researched reality  your offers & work     anything, anytime
+        │                  │                   │                    │
+   worlds/<node>/      research/cases/       business/            inbox/note/
+   NN-slug.md          NN-slug.md            NN-slug.md           (waits for triage)
+        │                  │                   │                    │
+        └──── a case proves a concept ◄────────┘                    │
+                    a business area supplies its CTA & example ◄─────┘
+                                   (after one confirm)
+```
+
+| Shelf | What lives there | File it becomes | Site |
+|---|---|---|---|
+| **Thinking** | your position on one idea | Thinking Unit shell (`worlds/<node>/NN-…`) | `/concepts/<id>` |
+| **Cases** | a real thing that happened: company, decision, numbers, your read | case card (`research/cases/…`) | `/cases` |
+| **Business** | what you do, for whom, what moves the needle, what it's worth | business-area card (`business/…`) | `/business` |
+| **Notes** | anything at all, at any hour | stays unfiled until you confirm a shelf | `/triage` |
+
+**Why cases and business are first-class, not "content ideas":** a concept without evidence is an opinion,
+and a concept without an offer behind it is entertainment. The shelves exist so the proof and the commercial
+half get captured in their own shape, then cited — `world_links` on a card, `REAL EXAMPLE` on a thought.
+
+## The routing is a filing suggestion, never an interpretation
+
+`routeText()` looks at the words and proposes `{lane, node, confidence}`:
+
+* cues for **case**: `research`, `case`, `rebrand`, `ঘটেছিল`, `করেছিল`, `উদাহরণ`
+* cues for **business**: `client`, `offer`, `retainer`, `price`, `গ্রাহক`, `চুক্তি`, `সার্ভিস`
+* cues for **thinking**: `→`, `আসলে`, `ভুল`, `ধারণা`, `position`, `belief`, `framework`
+* node = which world's vocabulary and concept titles the text overlaps, with the reason recorded
+  (`routing_why: rebrand +3`) so the decision is auditable later
+
+Two safety rules, both tested:
+
+1. `confidence: low` ⇒ the capture stays `world: unfiled` and `npm run draft` **refuses** to invent a shell for it.
+   The engine would rather wait than guess where your thought belongs.
+2. Confirming a shelf moves a file. It never re-edits a sentence. If the move crosses shelves, whatever you
+   typed for the old shelf is preserved under `CAPTURED NOTES:` — nothing is lost in filing.
+
+## The habit (this is the answer to "best way to use it")
+
+The system only works if capture costs nothing at the moment the thought exists, and thinking costs
+something only in a scheduled place. So:
+
+```ntext
+ANY TIME (10 seconds, phone allowed)
+  /intake → shelf "auto" → write one line → Save. Stop. That's the whole habit.
+  (terminal: npm run intake -- --add --thought "…"   ·  or drop a .md into inbox/<shelf>/)
+
+WEEKLY (20 minutes, one sitting = /triage)
+  1. each capture shows its proposed shelf + node + why  → Confirm (or pick another)
+  2. npm run draft                                        → shells and cards appear, gaps marked
+  3. fill only what you actually know today; leave NEEDS_AUTHOR_INPUT where you don't
+
+WHEN A NODE IS READY (before anything goes out)
+  1. npm run check:strict      → refuses shells, thin units, cards without evidence
+  2. set status: approved + reviewed_by: <your name>   ← the only signature that counts
+  3. npm run content && npm run index && npm run build
+```
+
+Anti-patterns the gate is built to catch, so you can be careless at capture time and never at publish time:
+
+* giving a case without numbers → the card stays `Evidence / numbers: NEEDS_AUTHOR_INPUT`, so it can't be cited
+* giving a business area without price or proof → no invented promise can reach a caption
+* 200 words of undifferentiated stream → shelf `note`, node `unfiled`; it cannot silently become a "concept"
+* one shelf filling 50 concepts while cases stay empty → `/triage` count and the coverage bars show it plainly
+
+## What each shelf still owes you
+
+* 50 Thinking Units of Brand Thinking — drafted, awaiting your `reviewed_by`
+* node 02 (Marketing Thinking) — 2 captures from your own sentences, gaps open
+* Cases — 1 card, needs the research you already know: company, numbers, source
+* Business — 1 area, needs: your part, your proof, what makes it worth it
+* `thinking-core/` — 7 open questions that every shelf keeps referring back to
+

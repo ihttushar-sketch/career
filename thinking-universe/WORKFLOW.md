@@ -4,10 +4,23 @@ This is the **engine**. Copy-paste this file together with `thinking-core/tushar
 
 ---
 
+## 0. Four shelves around one main node
+
+The main node is the thinker, not a topic. Capture belongs to one of four shelves, and each shelf has its
+own artefact: **Thinking** → a concept in a node · **Cases** → a card in `research/cases/` ·
+**Business** → a card in `business/` · **Notes** → unfiled until triage. Same inbox, same gate, same rule:
+your words verbatim, everything else a marked question.
+
+```bash
+npm run intake -- --triage                    # what you dropped, and where it proposes to live
+npm run intake -- --confirm <file> --world <node> --lane <shelf>
+```
+
 ## 1. Author input (minimum viable) — three doors, one inbox
 
 ```text
-UI         /intake          pick node → write THOUGHT → save
+UI         /intake          shelf (auto) → write one line → save          ← any time, 10 seconds
+terminal   npm run intake -- --add --thought "…"          (or --world brand-thinking --lane case)
 terminal   npm run intake -- --add --world brand-thinking --thought "…"
 file       thinking-universe/inbox/<world>/2026-10-07-<slug>.md
 ```
@@ -93,7 +106,8 @@ Same engine, any world. Nothing about Brand Thinking is special except that it i
 ## 4a. The per-node loop, as it actually runs
 
 ```bash
-npm run intake -- --list                     # what is waiting in every node
+npm run intake -- --list                     # what is waiting, per shelf and per node
+npm run intake -- --triage                    # captures + the shelf/node they propose
 npm run draft                                # pending → shells (structure, never invented beliefs)
 # fill NEEDS_AUTHOR_INPUT in thinking-universe/worlds/<world>/NN-<slug>.md
 npm run check:strict                         # refuses to let a shell pass as finished
@@ -130,3 +144,15 @@ those as warnings so an unreviewed page can never be mistaken for a signed one.
 - QA gate: `python3 tools/validate.py --strict` in CI and as a pre-commit hook.
 - Reusable components: `HookBlock`, `FrameworkChain`, `VisualGallery`, `AuthorSignature`, `RelatedThinking`, `DepthTabs` (image / caption / short / article / connected).
 - Every concept page exposes copy-ready `linkedin_caption` + hashtag row for the author's own posting workflow.
+
+
+---
+
+## 6. The habit, in three lines (master doc §40)
+
+* **Any time:** `/intake` → one line → Save. No shelf, no node, no formatting. Capture is free.
+* **Weekly:** `/triage` → confirm shelf + node (one click each) → `npm run draft` → fill only what you know.
+* **Before publishing:** `npm run check:strict` → `status: approved` + `reviewed_by: <you>` → `npm run build`.
+
+Everything the engine does not know stays `NEEDS_AUTHOR_INPUT`. That is not a gap in the system; it is the
+system working — the shelf that would otherwise be filled with confident nonsense stays visibly empty.

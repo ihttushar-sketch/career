@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import UniverseMap from '../components/UniverseMap.jsx';
 import { loadWorlds, loadCore, stats, validateUnits, author } from '../lib/content.mjs';
+import { loadCases, loadBusinessAreas, intakeStats, LANES, LANE_IDS } from '../lib/intake-bridge.mjs';
 
 export const dynamic = 'force-static';
 
@@ -10,6 +11,9 @@ export default function Home() {
   const s = stats();
   const a = author();
   const gate = validateUnits();
+  const laneStats = intakeStats();
+  const laneCards = loadCases().length;
+  const bizCards = loadBusinessAreas().length;
 
   return (
     <>
@@ -57,6 +61,35 @@ export default function Home() {
               One Thinker. Many worlds. Ideas that link to other ideas.
             </p>
           </div>
+        </div>
+      </section>
+
+
+      <section className="wrap section">
+        <div className="section-head">
+          <h2>Four shelves around one thinker</h2>
+          <p>
+            The main node is not a topic — it is the person. Thinking, researched cases, business areas and loose
+            notes each get their own shape, their own shelf, and the same rule: your words stay yours.
+          </p>
+        </div>
+        <div className="grid-2" style={{ gap: 14 }}>
+          {LANE_IDS.map((id) => {
+            const lane = LANES[id];
+            const counts = laneStats.byLane.find((l) => l.lane === id);
+            const owned = id === 'case' ? laneCards : id === 'business' ? bizCards : null;
+            return (
+              <Link key={id} className="panel" href={id === 'thinking' ? '/intake?lane=thinking' : id === 'case' ? '/cases' : id === 'business' ? '/business' : '/triage'} style={{ padding: 18, display: 'block' }}>
+                <div className="row" style={{ gap: 8, alignItems: 'baseline' }}>
+                  <b style={{ fontSize: 17 }}>{lane.label}</b>
+                  <span className="mono dim" style={{ fontSize: 12 }}>
+                    {owned !== null ? `${owned} card(s)` : `${counts?.pending || 0} pending · ${counts?.drafted || 0} drafted`}
+                  </span>
+                </div>
+                <p className="dim" style={{ margin: '6px 0 0', fontSize: 14.5 }}>{lane.one_line}</p>
+              </Link>
+            );
+          })}
         </div>
       </section>
 

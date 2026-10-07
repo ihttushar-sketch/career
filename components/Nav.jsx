@@ -6,6 +6,8 @@ const LINKS = [
   { href: '/frameworks', label: 'Frameworks' },
   { href: '/graph', label: 'Graph' },
   { href: '/intake', label: '+ Add thinking' },
+  { href: '/triage', label: 'Triage' },
+  { href: '/cases', label: 'Cases' },
   { href: '/about', label: 'About' },
 ];
 

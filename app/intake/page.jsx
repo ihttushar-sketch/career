@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import IntakeForm from '../../components/IntakeForm.jsx';
-import { loadWorlds, listInbox, intakeStats } from '../../lib/intake-bridge.mjs';
+import { loadWorlds, listInbox, intakeStats, LANES, LANE_IDS, loadCases, loadBusinessAreas } from '../../lib/intake-bridge.mjs';
 
 export const metadata = {
   title: 'Add thinking',
@@ -13,8 +13,17 @@ export default function IntakePage({ searchParams }) {
   const stats = intakeStats();
   const worlds = loadWorlds().map((w) => ({ ...w, pending: stats.byWorld.find((x) => x.id === w.id)?.pending || 0 }));
   const entries = listInbox();
-  const pending = entries.filter((e) => e.status !== 'pending' || true).slice(0, 12);
-  const initial = (sp && sp.world) || 'brand-thinking';
+  const pending = entries.filter((e) => e.status === 'pending').slice(0, 12);
+  const initial = (sp && sp.world) || 'auto';
+  const initialLane = (sp && sp.lane && LANE_IDS.includes(sp.lane) && sp.lane) || 'thinking';
+  const lanes = LANE_IDS.reduce((acc, id) => {
+    const d = LANES[id];
+    return {
+      ...acc,
+      [id]: { id, label: d.label, one_line: d.one_line, fields: d.fields.map(([k, label], i) => [k, label, d.questions[i] || label]) },
+    };
+  }, {});
+  const cards = { case: loadCases().length, business: loadBusinessAreas().length };
 
   return (
     <div className="wrap">
@@ -22,16 +31,22 @@ export default function IntakePage({ searchParams }) {
         <div className="mono eyebrow">Author input · the only irreplaceable layer</div>
         <h1 style={{ fontSize: 'clamp(34px,5vw,58px)' }}>Add your thinking to a node</h1>
         <p className="lede" style={{ marginTop: 14, maxWidth: '58ch' }}>
-          One thought, in your own words, is enough to start. It lands in that node's inbox. <code>npm run draft</code>{' '}
-          turns it into a Thinking Unit shell — your sentences placed verbatim, every missing position marked{' '}
-          <code>NEEDS_AUTHOR_INPUT</code> instead of guessed.
+          The main node is you. Four shelves sit around it — your <b>thinking</b>, the <b>cases</b> you researched, your{' '}
+          <b>business areas</b>, and loose <b>notes</b>. Pick a shelf or just write: the system proposes where it belongs,
+          you confirm. <code>npm run draft</code> then turns each capture into a shell — your sentences verbatim, every
+          missing position marked <code>NEEDS_AUTHOR_INPUT</code> instead of guessed.
         </p>
+        <div className="row" style={{ marginTop: 16, gap: 10, flexWrap: 'wrap' }}>
+          <Link className="btn" href="/triage">Triage queue</Link>
+          <Link className="btn" href="/cases">Case library ({cards.case})</Link>
+          <Link className="btn" href="/business">Business map ({cards.business})</Link>
+        </div>
       </section>
 
       <section className="section">
         <div className="grid-2" style={{ gridTemplateColumns: '1.55fr 1fr', alignItems: 'start' }}>
           <div className="panel" style={{ padding: 24 }}>
-            <IntakeForm worlds={worlds} initialWorld={initial} />
+            <IntakeForm worlds={worlds} lanes={lanes} initialWorld={initial} initialLane={initialLane} />
           </div>
           <div>
             <div className="section-head" style={{ margin: '0 0 10px' }}>
@@ -43,7 +58,7 @@ export default function IntakePage({ searchParams }) {
                 {pending.map((e) => (
                   <li key={e.id} style={{ gridTemplateColumns: '1fr' }}>
                     <b>
-                      {e.world} · {e.status}
+                      {e.lane || 'thinking'} · {e.world} · {e.status}
                     </b>
                     <span style={{ fontSize: 15 }}>
                       {e.fields.title || (e.fields.thought || '').replace(/\s+/g, ' ').slice(0, 96)}
