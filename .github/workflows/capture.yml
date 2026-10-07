@@ -1,0 +1,110 @@
+name: Capture to inbox (phone path)
+
+# Any device, no PC, no terminal: file a "Capture" issue from your phone.
+# This workflow turns the issue into one inbox file (your words, byte for byte), drafts the
+# shell/card, and opens a pull request. Nothing merges and nothing publishes — approval is
+# still your click, exactly like the rest of this universe.
+
+on:
+  issues:
+    types: [opened, labeled, reopened]
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
+jobs:
+  file-capture:
+    if: |
+      github.actor != 'github-actions[bot]' &&
+      contains(github.event.issue.labels.*.name, 'capture') &&
+      !contains(github.event.issue.labels.*.name, 'filed')
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      ISSUE: ${{ github.event.issue.number }}
+    steps:
+      - name: Resolve which branch holds the universe
+        id: branch
+        run: |
+          # order matters: an explicit override, then the default branch (where the universe now
+          # lives after PR #1), and only as a fallback a session branch like arena/*
+          BR="${{ vars.THINKING_BRANCH }}"
+          if [ -z "$BR" ]; then BR="${{ github.event.repository.default_branch }}"; fi
+          if [ -z "$BR" ]; then
+            BR=$(gh api "repos/$GITHUB_REPOSITORY/branches" --paginate -q '.[].name' | grep -m1 'arena/' || true)
+          fi
+          echo "name=$BR" >> "$GITHUB_OUTPUT"
+          echo "filing into $BR"
+
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.branch.outputs.name }}
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - run: npm ci --no-audit --no-fund
+
+      - name: Read the issue body
+        run: gh issue view "$ISSUE" --json body -q .body > /tmp/capture.md
+
+      - name: File the capture verbatim
+        run: node scripts/capture-from-issue.mjs --body-file /tmp/capture.md --issue "$ISSUE" --out /tmp/capture.json
+
+      - name: Draft the shell or card, then run the gate
+        run: |
+          npm run draft
+          node scripts/check-content.mjs | tail -4
+          echo "capture_file=$(jq -r .file /tmp/capture.json)" >> "$GITHUB_ENV"
+
+      - name: Open a pull request for approval
+        id: pr
+        run: |
+          TARGET="${{ steps.branch.outputs.name }}"
+          BRANCH="capture/issue-$ISSUE"
+          git config user.name "thinking-universe-bot"
+          git config user.email "bot@users.noreply.github.com"
+          git checkout -b "$BRANCH"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "already filed — no diff"
+            exit 0
+          fi
+          git commit -q -m "capture: file issue #$ISSUE into the inbox"
+          git push -q -u origin "$BRANCH"
+          cat > /tmp/pr.md <<'BODY'
+          ## What landed
+
+          One capture from issue ISSUE_NUM, filed into the inbox and drafted. The author's words are
+          verbatim; nothing was invented. Where the author has not answered, the file still says
+          `NEEDS_AUTHOR_INPUT`.
+
+          ## Author check before merging
+
+          - [ ] the words are what I meant
+          - [ ] gaps filled — or left open on purpose
+          - [ ] `npm run check:strict` passes
+
+          Merge = approve. Publishing happens only after that.
+          BODY
+          sed -i "s/ISSUE_NUM/$ISSUE/" /tmp/pr.md
+          URL=$(gh pr create --base "$TARGET" --head "$BRANCH" --title "Capture from issue #$ISSUE" --body-file /tmp/pr.md)
+          echo "url=$URL" >> "$GITHUB_OUTPUT"
+
+      - name: Tell the author where it landed
+        if: steps.pr.outputs.url != ''
+        run: |
+          cat > /tmp/comment.md <<'MSG'
+          Filed into the inbox: `CAPTURE_FILE`
+
+          Draft PR with the shell/card: PR_URL
+
+          আপনার লেখা হুবহু আছে। ভরাট করতে হবে শুধু যেখানে `NEEDS_AUTHOR_INPUT` — merge = approve, তার আগে কিছু publish হবে না।
+          MSG
+          sed -i "s|CAPTURE_FILE|$capture_file|; s|PR_URL|${{ steps.pr.outputs.url }}|" /tmp/comment.md
+          gh issue comment "$ISSUE" --body-file /tmp/comment.md
+          gh issue edit "$ISSUE" --add-label filed --remove-label capture

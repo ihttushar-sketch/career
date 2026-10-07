@@ -1,0 +1,51 @@
+name: Capture — throw a thought into the universe
+description: Any time, any device. The words go to your inbox untouched; nothing publishes itself.
+title: "Capture: "
+labels: ["capture"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **আপনার লেখা হুবহু যাবে — engine কিছু বানাবে না, শুধু ঘর ঠিক করবে।**
+        Fill one box. Everything else can stay empty.
+  - type: dropdown
+    id: lane
+    attributes:
+      label: Shelf
+      description: auto = system প্রস্তাব করবে, আপনি পরে confirm করবেন
+      options: [auto, thinking, case, business, note]
+      default: 0
+  - type: dropdown
+    id: node
+    attributes:
+      label: Node
+      description: auto = routing প্রস্তাব; না জেনে পারলে auto রাখুন
+      options: [auto, brand-thinking, marketing-thinking, reality-of-life, love-thinking, science-thinking, business-thinking, human-thinking, career-thinking, ai-thinking, leadership-thinking, money-thinking, society-thinking]
+      default: 0
+  - type: textarea
+    id: thought
+    attributes:
+      label: Your thought / observation
+      description: এক লাইনও চলবে। Banglish, ভাঙা বাক্য—যেমনটা মাথায় আছে।
+      placeholder: Client বলে সময় নেই—আসলে time না, decision ownership নেই।
+    validations:
+      required: true
+  - type: textarea
+    id: observation
+    attributes:
+      label: What you actually saw (optional)
+      description: event, number, client line, meeting detail
+  - type: textarea
+    id: angle
+    attributes:
+      label: Your chain / framework (optional)
+      placeholder: DECIDE → DESIGN → DEPLOY → DEBT
+      render: text
+  - type: textarea
+    id: wrong
+    attributes:
+      label: What others get wrong (optional)
+  - type: textarea
+    id: why
+    attributes:
+      label: Why it matters commercially (optional)

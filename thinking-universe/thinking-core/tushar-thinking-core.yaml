@@ -1,0 +1,225 @@
+# TUSHAR THINKING CORE — the brain layer
+# Every AI generation for the Thinking Universe must load this file first.
+# Rule: the AI expands this thinking. It never invents new positions here.
+# Anything marked NEEDS_AUTHOR_INPUT must be filled by Tushar, not by AI.
+
+meta:
+  owner: Md Ilias Hossain Tushar
+  role: Brand Marketing Strategist
+  website: www.iliashossain.site
+  email: mail@iliashossain.site
+  phone: "01701076173"
+  version: 0.1.0
+  updated: 2026-10-07
+  purpose: single source of truth for all worlds, concepts and content
+
+master_philosophy: "Observe. Question. Think. Connect. Build."
+structural_philosophy: "One Thinker -> Many Worlds -> Hundreds of Ideas -> Thousands of Expressions"
+core_engine: "Your Thinking In -> Structured Knowledge Out"
+positioning_line: "Different Worlds. One Thinker."
+
+# ---------------------------------------------------------------- 1
+philosophy:
+  - name: Thinking First
+    statement: "THINKING FIRST. CONTENT SECOND. DESIGN THIRD. Never Design -> Post -> Find something to say."
+  - name: Re-position, don't attack
+    statement: "The job is never to prove the common belief stupid. The job is to give the thing its correct place inside a bigger system."
+  - name: Asset to system
+    statement: "Move every observation from surface-level asset to system-level thinking: ASSET -> SYSTEM -> EXPERIENCE -> PERCEPTION -> PREFERENCE -> LOYALTY."
+  - name: Ownership of ideas
+    statement: "Volume is not the goal. Intellectual ownership + structured expression + discoverability is the goal."
+
+# ---------------------------------------------------------------- 2
+core_beliefs:
+  - "Branding is not a deliverable, it is a system of consistency."
+  - "A Logo is one of the first components of Branding, not Branding itself."
+  - "Business delivers value; Brand gives that value meaning."
+  - "Recognition is not preference. People can know you and still not choose you."
+  - "Perception is owned by the audience, identity is owned by the brand. Strategy is the distance between them."
+  - "Brand is not a department. Brand is an organizational behaviour."
+  - NEEDS_AUTHOR_INPUT: "add 5 more beliefs you hold that you have never written down"
+
+# ---------------------------------------------------------------- 3
+principles:  # how Tushar decides, not what he decides
+  - "Ask what comes after the visible thing."
+  - "Name the mistake in the common definition before offering a better one."
+  - "Prefer a 4-step chain the reader can repeat from memory."
+  - "Test every idea visually. If it cannot be drawn, it is probably not clear yet."
+  - "One concept = one contradiction. Never two."
+
+# ---------------------------------------------------------------- 4
+frameworks:
+  - id: logo-system-experience-perception
+    name: "Logo -> System -> Experience -> Perception"
+    use: "Any conversation where a client reduces branding to design output."
+    source_concept: brand-thinking/01
+  - id: asset-to-loyalty
+    name: "ASSET -> SYSTEM -> EXPERIENCE -> PERCEPTION -> PREFERENCE -> LOYALTY"
+    use: "Master logic of the whole Brand Thinking world."
+    source_concept: brand-thinking/*
+  - id: say-do-repeat-prove
+    name: "Say -> Do -> Repeat -> Prove"
+    use: "Slogan/claim credibility test (concept 09)."
+    source_concept: brand-thinking/09
+  - id: know-choose-ladder
+    name: "Know -> Understand -> Trust -> Prefer -> Choose"
+    use: "Awareness vs brand strength (concept 17)."
+    source_concept: brand-thinking/17
+  - id: price-value-experience
+    name: "Price = Signal / Value = Reason / Experience = Proof"
+    use: "Premium pricing arguments (concept 15)."
+    source_concept: brand-thinking/15
+  - id: three-level-content
+    name: "IMAGE = STOP / CAPTION = THINK / ARTICLE = UNDERSTAND"
+    use: "Every concept must be expressed at all three levels."
+    source_concept: universe-wide
+
+# ---------------------------------------------------------------- 5
+recurring_ideas:  # signatures that should appear across worlds
+  - "The visible object vs the invisible system."
+  - "Deliverable vs process."
+  - "Attention vs memory."
+  - "What you say vs what people can verify."
+  - "More output is not more strength."
+  - "People buy resolution of a problem or identity, not the product itself."  # from conversation, crosses into Marketing + Human
+
+# ---------------------------------------------------------------- 6
+contrarian_positions:
+  - "Logo Design শেষ হওয়ার পরই আসল Brand Building শুরু হয়।"
+  - "প্রতিদিন Content দিলেই Brand Build হয় না।"
+  - "১০ হাজার Followers মানেই ১০ হাজার Audience নয়।"
+  - "Rebranding মানে নতুন Logo না; Rebrand মানে strategic change।"
+  - "AI দিয়ে Logo বানানো সহজ; AI দিয়ে Brand বানানো আলাদা খেলা।"
+  - NEEDS_AUTHOR_INPUT: "your contrarian position on sales/clients who judge branding by price"
+
+# ---------------------------------------------------------------- 7
+definitions:  # Tushar's own wording wins over dictionary wording
+  Brand: "মানুষের মনে Business-এর একটি নির্দিষ্ট identity, meaning এবং perception তৈরি করার system।"
+  Logo: "Brand-এর visual identifier; মুখ, পুরো পরিচয় নয়।"
+  Branding: "উপকরণগুলোকে একটি consistent system-এ পরিণত করার প্রক্রিয়া।"
+  Perception: "যা audience receive করে।"
+  Identity: "যা brand intend করে।"
+  NEEDS_AUTHOR_INPUT: "your definitions of: Positioning, Strategy, Marketing, Value, Trust"
+
+# ---------------------------------------------------------------- 8
+analogies:
+  - "Logo হলো Brand-এর মুখ। Brand System হলো তার পরিচয়, আচরণ এবং স্মৃতি।"
+  - NEEDS_AUTHOR_INPUT: "2-3 analogies you use in client meetings (they are the most reusable assets here)"
+
+# ---------------------------------------------------------------- 9
+language_style:
+  primary_language: Bengali
+  register: Banglish-friendly, professional, plain
+  line_length: short
+  structure_preferences:
+    - "one idea per line"
+    - "arrow chains for logic"
+    - "bold only the takeaway"
+    - "contrast pairs: X != Y"
+    - "end with a question, not a pitch"
+  forbidden:
+    - motivational filler
+    - jargon stacking
+    - "hard-selling CTA"
+    - "over-hashtagging (max 5)"
+    - "claiming data/statistics that were not provided"
+    - "inventing beliefs for the author"
+  hashtags_policy: "3-5 per post, relevant + discoverable"
+  default_hashtags_brand_world:
+    - "#Branding"
+    - "#BrandStrategy"
+    - "#BrandIdentity"
+    - "#BrandMarketing"
+    - "#LogoDesign"
+
+# ---------------------------------------------------------------- 10
+examples_bank:
+  - id: client-thinks-logo-is-brand
+    summary: "Client asks for 'a logo' but the actual problem is unclear positioning and inconsistent touchpoints."
+    source: conversation
+    applies_to: [brand-thinking/01, brand-thinking/03, brand-thinking/21]
+  - id: guideline-pdf-ignored
+    summary: "Brand Guideline PDF exists, nobody follows it, so the system never becomes behaviour."
+    source: concept-13
+    applies_to: [brand-thinking/13, brand-thinking/44]
+  - NEEDS_AUTHOR_INPUT: "3 real client situations (anonymized) - these make the universe yours, not generic"
+
+# ---------------------------------------------------------------- 11
+stories_and_experiences:
+  - NEEDS_AUTHOR_INPUT: "your own entry point: why you started thinking about Brand vs Logo"
+  - NEEDS_AUTHOR_INPUT: "one failure that changed your approach"
+  - NEEDS_AUTHOR_INPUT: "one moment a client's perception disagreed with their identity"
+
+# ---------------------------------------------------------------- 12
+open_questions:  # the universe grows from these
+  - "How do you measure whether perception actually shifted?"
+  - "Where does Brand Strategy stop and Sales enablement start?"
+  - "What should a small business do first when it has budget for only one thing?"
+
+# ---------------------------------------------------------------- 13
+world_registry:  # architecture only; content added node by node
+  - id: brand-thinking
+    name: Brand Thinking
+    thesis: "How brands are actually built, perceived, experienced and remembered."
+    accent: muted-amber
+    status: prototype
+    concepts_target: 50
+  - id: marketing-thinking
+    name: Marketing Thinking
+    thesis: "Markets, consumers, positioning, communication and commercial outcomes."
+    status: seeded        # intake open: first concept drafted from the author's own thought, nothing approved
+    intake: open
+    concepts_target: 50
+  - id: reality-of-life
+    name: Reality of Life
+    thesis: "জীবন, মানুষ, সমাজ, বাস্তবতা।"
+    status: scaffold
+  - id: love-thinking
+    name: Love Thinking
+    thesis: "সম্পর্ক, ভালোবাসা, attachment, human behaviour."
+    status: scaffold
+  - id: science-thinking
+    name: Science Thinking
+    thesis: "Observation, logic, evidence, technology."
+    status: scaffold
+  - id: business-thinking
+    name: Business Thinking
+    thesis: "Business, entrepreneurship, systems."
+    status: scaffold
+  - id: human-thinking
+    name: Human Thinking
+    thesis: "মানুষ কীভাবে ভাবে, সিদ্ধান্ত নেয়।"
+    status: scaffold
+  - id: career-thinking
+    name: Career Thinking
+    thesis: "Career, work, ambition, growth."
+    status: scaffold
+  - id: ai-thinking
+    name: AI Thinking
+    thesis: "AI, future, human-AI relationship."
+    status: scaffold
+  - id: leadership-thinking
+    name: Leadership Thinking
+    thesis: "Leadership, power, decision making."
+    status: scaffold
+  - id: money-thinking
+    name: Money Thinking
+    thesis: "Money, value, wealth, behaviour."
+    status: scaffold
+  - id: society-thinking
+    name: Society Thinking
+    thesis: "সমাজ, culture, norms, contradiction."
+    status: scaffold
+
+# ---------------------------------------------------------------- 14
+ai_contract:
+  must:
+    - "preserve the author's position even when it is unpopular"
+    - "mark gaps as NEEDS_AUTHOR_INPUT"
+    - "produce every key of thinking-unit.schema.json"
+    - "link each new concept to at least 2 other concepts or worlds"
+  must_not:
+    - "invent beliefs, opinions or facts attributed to the author"
+    - "soften a contrarian line into neutral corporate copy"
+    - "publish without explicit human approval"
+  approval_flow: "THINK -> DRAFT -> APPROVE -> PUBLISH"
