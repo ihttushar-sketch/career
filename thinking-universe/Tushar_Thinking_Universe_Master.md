@@ -2036,3 +2036,106 @@ Anti-patterns the gate is built to catch, so you can be careless at capture time
 * Business — 1 area, needs: your part, your proof, what makes it worth it
 * `thinking-core/` — 7 open questions that every shelf keeps referring back to
 
+
+
+---
+
+# 41. EVERY THINKING NODE IS OPEN — AND CAPTURE DOES NOT NEED A PC
+
+Two things were asked: make all the thinking nodes ready, and how to add a concept at any time from anywhere
+without sitting at the computer. Both are answered with structure, not with invented content.
+
+## 41.1 Ready means "every slot knows why it exists"
+
+A node is not ready because 50 files exist. It is ready when each of the 50 slots has a *state* and a *reason*:
+
+| State | Meaning | Who moves it forward |
+|---|---|---|
+| `signed off` | `status: approved` + `reviewed_by` — publishable | — |
+| `draft shell` | drafted from your capture, gaps marked `NEEDS_AUTHOR_INPUT` | you fill |
+| `captured, not drafted` | your thought sits in the inbox | `npm run draft` |
+| `open · reserved` | nothing here yet, **and another node already points at this one** | you, in priority order |
+| `open` | an empty slot carrying a seed question taken from your own recurring ideas, open questions, owed definitions and frameworks | you, or delete it |
+
+Generated per node into `worlds/<node>/PLAN.md`:
+
+```bash
+npm run plan                              # all 12 nodes
+node scripts/open-node.mjs --world money-thinking
+```
+
+Current truth, generated from the repo (not from memory):
+
+```ntext
+node                 signed  draft  capture   open   graph demand
+brand-thinking           50      0        0      0   0
+marketing-thinking        0      2        0     48   30   ← wanted most, start here
+business-thinking         0      0        0     50   20
+human-thinking            0      0        0     50   16
+money-thinking            0      0        0     50    8
+science-thinking          0      0        0     50    5
+reality-of-life           0      0        0     50    5
+career-thinking           0      0        0     50    4
+leadership-thinking       0      0        0     50    4
+society-thinking          0      0        0     50    2
+love-thinking             0      0        0     50    0
+ai-thinking               0      0        0     50    0
+```
+
+**"Graph demand" is the honest priority order.** 30 Brand Thinking concepts promise a Marketing answer;
+20 promise a Business one. Filling those first makes the universe denser than filling a node nobody
+links to yet. `/plan` shows the same table as a page with progress bars.
+
+Seed questions are never positions: a seed is your own `recurring idea` with `— এই node-এ আপনার
+position কী?` appended, and the file says so (`seed from your recurring idea — replace with your own
+framing`). Test 41-a asserts every open row in an untouched node ends with `?` — so an empty node cannot
+silently become a fake opinion.
+
+## 41.2 Capture without a computer
+
+Three paths, all writing the *same* inbox file, all keeping your wording byte-for-byte:
+
+```ntext
+A. /quick            one box, phone browser. POST → inbox/<node>/…
+                     server not available (static host)? the same button becomes a
+                     prefilled GitHub issue — you press Submit, nothing else.
+
+B. GitHub issue      Issues → New → "Capture — throw a thought into the universe"
+                     fields: shelf, node, thought (+ optional observation/chain/wrong/why)
+                     .github/workflows/capture.yml then:
+                       1. files the entry        node scripts/capture-from-issue.mjs
+                       2. runs npm run draft     shell or card created
+                       3. runs the gate          check-content output pasted in the PR
+                       4. opens a PULL REQUEST   and labels your issue `filed`
+                     You approve by merging. The Action never merges, never publishes.
+
+C. message me        a line in chat is enough; I file it in the same inbox format.
+```
+
+**One setup step:** GitHub runs `on: issues` workflows from the *default* branch. So this path turns on the
+day these files are merged into `main`. Until then, path C (a line in chat) and path A (a running dev server)
+both work. If the universe should keep living on a working branch, set the repo variable `THINKING_BRANCH` and
+the Action files into that branch.
+
+Why a PR and not a direct commit: your own rule — `THINK → DRAFT → APPROVE → PUBLISH`. A phone capture
+is THINK; CI drafting it is DRAFT; the merge click is APPROVE; the site build is PUBLISH. Automating the
+step between THINK and APPROVE would have broken the contract, so the automation stops at a PR.
+
+The parser is deliberately paranoid (`node scripts/capture-from-issue.mjs --selftest`):
+
+* GitHub's `### Label` sections are mapped to fields; ``` fences and template help quotes are stripped
+* `No response` / `N/A` / `—` count as *empty*, so nothing gets filed from placeholder text
+* fewer than 6 usable characters ⇒ exit 2, "no usable thought" — the CI step fails loudly instead of
+  inventing a concept to fill the gap
+* `lane: auto` / missing node ⇒ proposed shelf, `world: unfiled`, and `npm run draft` refuses to guess
+
+## 41.3 What "done" looks like from here
+
+1. **You**: `/triage` weekly → confirm shelf+node → `npm run draft`.
+2. **You**: fill the *reserved* slots first in Marketing (30), Business (20), Human (16) — the plan lists
+   who is waiting on each one.
+3. **You**: cases and business areas in parallel — a concept citing a case with numbers is worth ten that
+   don't.
+4. **Gate**: `npm run check:strict` per node, then `status: approved` + `reviewed_by` — never batch-approved
+   without reading.
+5. Only then: `npm run content && npm run index && npm run plan && npm run build`.

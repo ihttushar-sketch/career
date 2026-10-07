@@ -15,7 +15,8 @@
     "index": "node scripts/build-index.mjs",
     "link-assets": "node scripts/link-assets.mjs",
     "intake": "node scripts/intake.mjs",
-    "draft": "node scripts/draft.mjs"
+    "draft": "node scripts/draft.mjs",
+    "plan": "node scripts/open-node.mjs --all"
   },
   "dependencies": {
     "gray-matter": "^4.0.3",

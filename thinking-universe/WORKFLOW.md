@@ -156,3 +156,31 @@ those as warnings so an unreviewed page can never be mistaken for a signed one.
 
 Everything the engine does not know stays `NEEDS_AUTHOR_INPUT`. That is not a gap in the system; it is the
 system working — the shelf that would otherwise be filled with confident nonsense stays visibly empty.
+
+
+---
+
+## 7. Filling every node, from anywhere
+
+```bash
+npm run plan                              # worlds/<node>/PLAN.md — 50 slots, states, graph demand
+```
+
+A node is ready when each slot has a reason: `signed off` · `draft shell` · `captured, not drafted` ·
+`open · reserved` (another node is already waiting on it) · `open` (a seed question from your own ideas).
+
+**Capture with no computer:**
+
+| Path | Works offline | How it lands |
+|---|---|---|
+| `/quick` | needs a server | `POST /api/intake` → `inbox/<node>/…` |
+| GitHub issue “Capture” | any browser, any phone | Action files it, drafts it, opens a PR — merge = approve |
+| a line in chat | yes | I file it in the same format |
+
+```bash
+node scripts/capture-from-issue.mjs --selftest        # the phone path's parser, verified
+node scripts/open-node.mjs --world money-thinking     # open/refresh a single node
+```
+
+Priority is not a guess: `graph demand` in each plan counts how many concepts in other nodes already point
+at this one — Marketing 30, Business 20, Human 16. Fill those first and the universe densifies itself.

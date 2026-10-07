@@ -2,6 +2,7 @@ import Link from 'next/link';
 import ConceptBrowser from '../../../components/ConceptBrowser.jsx';
 import { getWorld, unitsByWorld, loadCore, validateUnits } from '../../../lib/content.mjs';
 import { listInbox } from '../../../lib/intake.mjs';
+import { buildPlan } from '../../../lib/plan.mjs';
 
 export const dynamic = 'force-static';
 
@@ -46,6 +47,7 @@ export default async function WorldPage({ params }) {
   const inbox = listInbox({ world });
   const pending = inbox.filter((e) => e.status === 'pending').length;
   const drafted = inbox.filter((e) => e.status === 'drafted').length;
+  const plan = buildPlan(world);
   const prompts = units.reduce((s, u) => s + (u.visual_concepts || []).length, 0);
 
   return (
@@ -66,8 +68,12 @@ export default async function WorldPage({ params }) {
           <Link className="btn" href={`/intake?world=${world}`} style={{ padding: '10px 14px' }}>
             + Add your thinking to this node
           </Link>
+          <Link className="btn" href={`/plan`} style={{ padding: '10px 14px' }}>
+            Readiness of all nodes
+          </Link>
           <span className="mono dim">
-            inbox: {pending} pending{drafted ? ` · ${drafted} drafted` : ''} — every node fills the same way Brand did
+            inbox: {pending} pending{drafted ? ` · ${drafted} drafted` : ''} · graph demand {plan.counts.reserved} ·{' '}
+            {plan.counts.open} slot(s) still open — <code>worlds/{world}/PLAN.md</code>
           </span>
         </div>
         <div className="hero-stats" style={{ marginTop: 18, gridTemplateColumns: 'repeat(4, minmax(90px, 1fr))' }}>
