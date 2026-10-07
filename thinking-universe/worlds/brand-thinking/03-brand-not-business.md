@@ -60,7 +60,7 @@ visual_concepts:
     kind: hero
     purpose: "মূল metaphor—Brand ≠ Business এক দৃশ্যে বোঝানো"
     headline_on_image: "A BUSINESS DELIVERS. A BRAND MEANS SOMETHING."
-    asset_path: ../../assets/03_brand_delivers_meaning.png
+    asset_path: ../../assets/brand-thinking/03_brand_delivers_meaning.png
     prompt: >-
       Minimal premium flat vector editorial illustration for LinkedIn, 1:1 composition, strong negative space, deep ink black + warm off-white + one muted amber accent, thin rule lines, low text density, subtle grain, no photorealism, no paragraph text, no watermark, sophisticated strategic-branding aesthetic.
       Two halves split by a thin vertical line: LEFT shows the narrow/common version (Revenue, margin আর operation ঠিক থাকলে brand ঠিক।) as one small isolated object; RIGHT shows the larger system (DEFEND) as a layered isometric cluster of touchpoints.

@@ -11,9 +11,11 @@
     "content": "node scripts/build-content.mjs",
     "check": "node scripts/check-content.mjs",
     "check:strict": "node scripts/check-content.mjs --strict",
-    "test": "node --test tests/*.test.mjs",
+    "test": "node --test --test-concurrency=1 tests/*.test.mjs",
     "index": "node scripts/build-index.mjs",
-    "link-assets": "node scripts/link-assets.mjs"
+    "link-assets": "node scripts/link-assets.mjs",
+    "intake": "node scripts/intake.mjs",
+    "draft": "node scripts/draft.mjs"
   },
   "dependencies": {
     "gray-matter": "^4.0.3",

@@ -66,7 +66,7 @@ visual_concepts:
     kind: hero
     purpose: মূল metaphor—একটা বিচ্ছিন্ন Logo বনাম পুরো Brand system
     headline_on_image: "LOGO IS SEEN. BRAND IS EXPERIENCED."
-    asset_path: ../../assets/01_logo_is_seen_brand_is_experienced.png
+    asset_path: ../../assets/brand-thinking/01_logo_is_seen_brand_is_experienced.png
     rendered: 1280x1280, 1:1
     prompt: >-
       Minimal premium flat vector editorial illustration for LinkedIn, wide 16:9,

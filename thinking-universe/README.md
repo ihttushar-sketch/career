@@ -6,7 +6,7 @@ Everything needed to understand, rebuild and extend **Md Ilias Hossain Tushar's*
 
 ---
 
-> **Status:** the engine is built and running. Node 01 (Brand Thinking) is filled with all 50
+> **Status:** the engine is built and running, and every node now has its own intake door (`/intake`). Node 01 (Brand Thinking) is filled with all 50
 > Thinking Units, 17 tests pass, the site builds to 61 static pages. See
 > `Tushar_Thinking_Universe_Master.md` §38 for the implementation map and the exact commands.
 
@@ -25,6 +25,7 @@ Not a blog. Not a portfolio. A **personal intellectual ecosystem**: the author's
 | `CONVERSATION_TRANSCRIPT.md` | The original dialogue, plus 8 extracted voice notes (how the author actually writes and reasons) | any AI that must write *in his voice* |
 | `thinking-core/tushar-thinking-core.yaml` | **TUSHAR THINKING CORE** — philosophy, beliefs, principles, frameworks, recurring ideas, contrarian positions, definitions, language style, forbidden patterns, world registry, AI contract. `NEEDS_AUTHOR_INPUT` marks gaps only he can fill | the engine's brain; load it before generating anything |
 | `thinking-unit.schema.json` | Machine-readable content contract: every field a Thinking Unit must carry, with types, limits and rules | validation, DB schema, CMS fields, codegen |
+| `inbox/` (via app) | **Per-node thinking intake** — the author's own perception for any node; UI at `/intake`, CLI `npm run intake`, or a plain .md file. See master doc §39 | the author, daily |
 | `WORKFLOW.md` | Copy-paste generation prompt + approval loop + how to add a new World + website build notes | the day-to-day operating manual |
 | `worlds/brand-thinking/INDEX.md` | All 50 concepts as a table: `concept_id`, title, hook, breakdown, status — plus a cluster-based expansion order (not 01→50) | content planning |
 | `worlds/brand-thinking/01-logo-not-equal-brand.md` | **Prototype Thinking Unit**, fully expanded: front matter per schema + 2000-word article, framework, examples, counter-example, 5 visual concepts with prompts, LinkedIn caption, signature | the reference implementation for the other 49 |

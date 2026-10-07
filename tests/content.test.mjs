@@ -42,7 +42,10 @@ test('the idea graph has no dangling or orphaned links', () => {
 
 test('every concept renders as a schema-valid thinking unit file', () => {
   const units = loadUnits();
-  assert.equal(units.length, 50);
+  const brand = unitsByWorld('brand-thinking');
+  assert.equal(brand.filter((u) => u.status === 'approved' || u.status === 'published').length, 50, 'node 01 must hold all 50 signed concepts');
+  assert.ok(brand.length >= 50, 'a node may grow past its planned 50 via intake');
+  assert.ok(units.length >= 50, 'total units across nodes');
   const gate = validateUnits(units);
   assert.equal(gate.errors.length, 0, gate.errors.map((e) => `${e.id}: ${e.issues.join('; ')}`).join('\n'));
 });
@@ -52,12 +55,13 @@ test('unit files live in the content tree and are unique by number and id', () =
   const ids = new Set();
   const nums = new Set();
   for (const u of units) {
+    const worldKey = `${u.world_id}#${u.concept_number}`;
     assert.ok(fs.existsSync(u.__file), `missing file for ${u.concept_id}`);
-    assert.equal(u.world_id, WORLD.id);
+    assert.ok(['brand-thinking', 'marketing-thinking', 'money-thinking'].includes(u.world_id) || loadCore().world_registry.some((w) => w.id === u.world_id), 'unit belongs to a registered world');
     assert.ok(!ids.has(u.concept_id), `duplicate id ${u.concept_id}`);
-    assert.ok(!nums.has(u.concept_number), `duplicate number ${u.concept_number}`);
+    assert.ok(!nums.has(worldKey), `duplicate number ${u.concept_number} in ${u.world_id}`);
     ids.add(u.concept_id);
-    nums.add(u.concept_number);
+    nums.add(worldKey);
     assert.ok(u.__url.startsWith('/concepts/'), `${u.concept_id}: link must resolve`);
   }
 });
@@ -72,8 +76,8 @@ test('author voice is preserved in every unit (original thought survives expansi
   }
 });
 
-test('publish rules enforced: 3-5 hashtags, 4-5 visuals, hero headline is short', () => {
-  for (const u of loadUnits()) {
+test('publish rules enforced on approved units: 3-5 hashtags, 4-5 visuals, headline discipline', () => {
+  for (const u of loadUnits().filter((x) => x.status === 'approved' || x.status === 'published')) {
     assert.ok(u.hashtags.length >= 3 && u.hashtags.length <= 5, `${u.concept_id}: ${u.hashtags.length} hashtags`);
     assert.ok(u.visual_concepts.length >= 4, `${u.concept_id}: needs 4-5 visuals`);
     for (const v of u.visual_concepts) {
@@ -94,8 +98,11 @@ test('publish rules enforced: 3-5 hashtags, 4-5 visuals, hero headline is short'
 });
 
 test('hooks are distinct — the series must not repeat itself', () => {
-  const hooks = loadUnits().map((u) => String(u.hook).trim());
-  assert.equal(new Set(hooks).size, 50, 'duplicate hooks found');
+  const hooks = unitsByWorld('brand-thinking')
+    .filter((u) => u.status === 'approved' || u.status === 'published')
+    .map((u) => String(u.hook).trim());
+  assert.equal(hooks.length, 50, 'the signed series is 50 units');
+  assert.equal(new Set(hooks).size, 50, 'duplicate hooks found in Brand Thinking');
 });
 
 test('deep article covers every required reasoning section', () => {
@@ -112,18 +119,31 @@ test('cross-world threads are declared so future nodes can be prioritised', () =
   assert.ok(graph.edges.length >= 90, `expected a dense same-world graph, got ${graph.edges.length}`);
   assert.ok(graph.worldThreads.length >= 6, 'brand thinking should reach into several other worlds');
   const s = stats();
-  assert.equal(s.worldsLive, 1);
-  assert.equal(s.full >= 1, true);
+  assert.ok(s.worldsLive >= 1, 'nodes with content become live automatically');
+  assert.ok(s.full >= 1);
+  assert.ok(s.units >= 51, 'node 01 (50) plus intake-drafted shells');
 });
 
 test('world registry, core and assets stay consistent', () => {
   const core = loadCore();
   assert.ok(core.world_registry.length >= 10);
   const worlds = loadWorlds();
-  assert.equal(worlds.find((w) => w.id === 'brand-thinking').unitCount, 50);
-  assert.ok(worlds.filter((w) => w.live).length === 1, 'only validated nodes may be live at phase 04');
-  const asset = path.join(ROOT, 'thinking-universe', 'assets', '01_logo_is_seen_brand_is_experienced.png');
-  assert.ok(fs.existsSync(asset), 'concept 01 hero asset must ship with the content');
+  assert.ok(worlds.find((w) => w.id === 'brand-thinking').unitCount >= 50);
+  assert.equal(worlds.find((w) => w.id === 'brand-thinking').approvedCount, 50);
+  assert.equal(
+    worlds.filter((w) => w.approvedCount > 0).length,
+    1,
+    'exactly one node is signed off at phase 04; other nodes may hold drafts',
+  );
+  // assets are grouped per node: assets/<world_id>/<nn>_<slug>.png
+  const assetDir = path.join(ROOT, 'thinking-universe', 'assets', 'brand-thinking');
+  const assets = fs.existsSync(assetDir) ? fs.readdirSync(assetDir) : [];
+  assert.ok(assets.some((f) => /^01_.*\.png$/.test(f)), 'concept 01 hero asset must ship with the content');
+  assert.ok(assets.length >= 5, 'the prototype node should carry rendered heroes');
+  assert.ok(!fs.existsSync(path.join(ROOT, 'thinking-universe', 'worlds', 'marketing-thinking', '01-product-purchase.md'))
+    ? true
+    : !fs.readFileSync(path.join(ROOT, 'thinking-universe', 'worlds', 'marketing-thinking', '01-product-purchase.md'), 'utf8').includes('asset_path'),
+    'a draft shell must not claim another node’s image');
 });
 
 test('contact signature is present and identical on every unit', () => {
@@ -140,7 +160,8 @@ test('contact signature is present and identical on every unit', () => {
 test('sitemap covers every live page and every concept', async () => {
   const mod = await import('../app/sitemap.js');
   const urls = mod.default().map((e) => e.url);
-  assert.equal(urls.length, 5 + 1 + 50);
+  const liveWorlds = loadWorlds().filter((w) => w.live).length;
+  assert.equal(urls.length, 5 + liveWorlds + loadUnits().length, 'every live page and every unit is discoverable');
   assert.ok(urls.includes('https://www.iliashossain.site/concepts/logo-not-equal-brand'));
   assert.ok(urls.includes('https://www.iliashossain.site/worlds/brand-thinking'));
 });

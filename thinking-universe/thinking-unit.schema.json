@@ -311,6 +311,24 @@
         "null"
       ],
       "description": "author sign-off; null until approved by hand"
+    },
+    "title_provisional": {
+      "type": "boolean",
+      "description": "true when the drafter had to shorten the author's thought into a working title"
+    },
+    "hook_provisional": {
+      "type": "boolean"
+    },
+    "intake": {
+      "type": "string",
+      "description": "inbox entry filename this unit was drafted from"
+    },
+    "needs_author_input": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "field names still awaiting the author's own position"
     }
   },
   "x_body_fields": {

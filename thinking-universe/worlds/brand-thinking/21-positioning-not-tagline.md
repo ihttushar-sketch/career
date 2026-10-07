@@ -60,7 +60,7 @@ visual_concepts:
     kind: hero
     purpose: "মূল metaphor—Positioning ≠ Tagline এক দৃশ্যে বোঝানো"
     headline_on_image: "A TAGLINE NAMES THE SEAT. POSITIONING IS THE SEAT."
-    asset_path: ../../assets/21_positioning_is_the_seat.png
+    asset_path: ../../assets/brand-thinking/21_positioning_is_the_seat.png
     prompt: >-
       Minimal premium flat vector editorial illustration for LinkedIn, 1:1 composition, strong negative space, deep ink black + warm off-white + one muted amber accent, thin rule lines, low text density, subtle grain, no photorealism, no paragraph text, no watermark, sophisticated strategic-branding aesthetic.
       Two halves split by a thin vertical line: LEFT shows the narrow/common version (একটা positioning statement / tagline লেখা = positioning complete।) as one small isolated object; RIGHT shows the larger system (WHAT WE REFUSE) as a layered isometric cluster of touchpoints.

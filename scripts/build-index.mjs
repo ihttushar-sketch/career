@@ -8,6 +8,11 @@ import path from 'node:path';
 import { loadWorlds, unitsByWorld, CONTENT_ROOT } from '../lib/content.mjs';
 import { WORLD } from '../data/index.mjs';
 
+const argWorld = (() => {
+  const i = process.argv.indexOf('--world');
+  return i > -1 && process.argv[i + 1] ? process.argv[i + 1] : WORLD.id;
+})();
+
 const CLUSTERS = {
   1: 'foundations',
   2: 'identity ↔ perception',
@@ -18,8 +23,16 @@ const CLUSTERS = {
 };
 
 const worlds = loadWorlds();
-const w = worlds.find((x) => x.id === WORLD.id);
-const units = unitsByWorld(WORLD.id);
+const w = worlds.find((x) => x.id === argWorld);
+if (!w) {
+  console.error(`unknown world: ${argWorld}`);
+  process.exit(1);
+}
+const units = unitsByWorld(argWorld);
+if (!units.length) {
+  console.log(`${argWorld}: no units yet — nothing to index`);
+  process.exit(0);
+}
 const pad = (n) => String(n).padStart(2, '0');
 
 const rows = units.map((u) => {
@@ -38,6 +51,7 @@ const body = `# ${w.name} — Series Index
 > concept file (or its authored fields in \`data/\`) and regenerate.
 
 **World:** \`${w.id}\` · **Thesis:** ${w.thesis}
+**Node state:** ${w.status}${w.approvedCount === 0 ? ' — thinking intake started, no concept signed off yet' : ''}
 **Coverage:** ${units.length}/${w.target} concepts · ${units.filter((u) => u.status === 'approved' || u.status === 'published').length} approved · ${units.filter((u) => u.__depth === 'full').length} deep articles
 **Assets rendered:** ${units.filter((u) => u.__assets?.length).length} hero image(s) in \`thinking-universe/assets/\`
 
@@ -63,6 +77,6 @@ directions with production prompts, publish-ready LinkedIn caption, quote, conte
 3–5 hashtags, cross-links and the author signature.
 `;
 
-const out = path.join(CONTENT_ROOT, 'worlds', WORLD.id, 'INDEX.md');
+const out = path.join(CONTENT_ROOT, 'worlds', argWorld, 'INDEX.md');
 fs.writeFileSync(out, body, 'utf8');
 console.log(`wrote ${path.relative(process.cwd(), out)} — ${units.length} rows, ${Math.round(body.length / 1024)} KB`);

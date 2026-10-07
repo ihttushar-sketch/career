@@ -60,7 +60,7 @@ visual_concepts:
     kind: hero
     purpose: "মূল metaphor—Branding ≠ Logo Design এক দৃশ্যে বোঝানো"
     headline_on_image: "ONE DAY TO DESIGN. A LIFETIME TO APPLY."
-    asset_path: ../../assets/02_branding_not_logo_design.png
+    asset_path: ../../assets/brand-thinking/02_branding_not_logo_design.png
     prompt: >-
       Minimal premium flat vector editorial illustration for LinkedIn, 1:1 composition, strong negative space, deep ink black + warm off-white + one muted amber accent, thin rule lines, low text density, subtle grain, no photorealism, no paragraph text, no watermark, sophisticated strategic-branding aesthetic.
       Two halves split by a thin vertical line: LEFT shows the narrow/common version (Agency deliverable দিলে project complete।) as one small isolated object; RIGHT shows the larger system (REVISE) as a layered isometric cluster of touchpoints.

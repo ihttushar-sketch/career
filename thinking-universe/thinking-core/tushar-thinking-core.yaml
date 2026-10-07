@@ -167,7 +167,8 @@ world_registry:  # architecture only; content added node by node
   - id: marketing-thinking
     name: Marketing Thinking
     thesis: "Markets, consumers, positioning, communication and commercial outcomes."
-    status: scaffold
+    status: seeded        # intake open: first concept drafted from the author's own thought, nothing approved
+    intake: open
     concepts_target: 50
   - id: reality-of-life
     name: Reality of Life

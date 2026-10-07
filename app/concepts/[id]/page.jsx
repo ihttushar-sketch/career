@@ -126,6 +126,23 @@ export default async function ConceptPage({ params }) {
         <div className="prose" dangerouslySetInnerHTML={{ __html: html }} />
       </section>
 
+      {(u.needs_author_input?.length > 0 || String(u.status) === 'draft') ? (
+        <div className="notice">
+          <b>Thinking shell — your part is still open</b>
+          <p style={{ margin: '6px 0 0', fontSize: 15 }}>
+            {u.needs_author_input?.length
+              ? `Engine শুধু গঠন বানিয়েছে — ${u.needs_author_input.length}টা জায়গায় NEEDS_AUTHOR_INPUT, আপনার position-এর অপেক্ষায়। কোনো belief বানানো হয়নি।`
+              : 'Depth pass বাকি: section গুলো ভরার পর status: approved দিন।'}
+            {u.title_provisional ? ' Title provisional — আপনি বদলান।' : ''}
+            {u.hook_provisional ? ' Hook provisional — আপনি বদলান।' : ''}
+          </p>
+          <div className="row" style={{ marginTop: 12, gap: 10 }}>
+            <Link className="btn" href={`/intake?world=${u.world_id}`}>Add another thought to this node</Link>
+            <span className="mono dim">then: npm run check:strict</span>
+          </div>
+        </div>
+      ) : null}
+
       {(heroSrc || u.visual_concepts?.length) ? (
         <section className="section">
           <div className="section-head">

@@ -6,7 +6,9 @@ gated by tests.
 
 ```
 npm install
-npm run dev            # http://localhost:3000
+npm run dev            # http://localhost:3000 → /intake adds thinking to any node
+npm run intake -- --add --world marketing-thinking --thought "…"
+npm run draft          # pending thoughts → unit shells (NEEDS_AUTHOR_INPUT marks the gaps)
 npm test               # 17 integrity tests
 npm run check          # publication gate (schema + publish rules)
 npm run build          # gate + 61 static pages
@@ -16,7 +18,9 @@ npm run build          # gate + 61 static pages
 
 | Path | Role |
 |------|------|
-| `data/` | **the only place the author types** — 50 authored concepts (hook, thought, belief, thesis, framework, examples, counter-example, implications, quote, CTA, hero line, links) |
+| `/intake` | **the author's door for every node** — add a perception in the UI, it lands in that node's inbox |
+| `thinking-universe/inbox/<world>/` | pending thoughts, one file each; `npm run draft` turns them into shells |
+| `data/` | batch-authored concepts (Brand Thinking's 50) — 50 authored concepts (hook, thought, belief, thesis, framework, examples, counter-example, implications, quote, CTA, hero line, links) |
 | `scripts/build-content.mjs` | engine: authored fields → complete unit files (never overwrites hand edits) |
 | `thinking-universe/worlds/brand-thinking/*.md` | 50 Thinking Units — front matter = schema contract, body = article + caption |
 | `thinking-universe/thinking-core/tushar-thinking-core.yaml` | the brain: philosophy, beliefs, frameworks, language rules, AI contract |
@@ -31,6 +35,7 @@ npm run build          # gate + 61 static pages
 > Thinking first. Content second. Design third.
 
 Current state: **node 01 complete** (50 concepts, 52k words, 250 image prompts, 104 cross-links, 5 rendered heroes)
-· awaiting author sign-off (`reviewed_by`) · then the same engine fills Marketing, Reality of Life, Love, Science.
+· awaiting author sign-off (`reviewed_by`) · **Marketing Thinking seeded** — first shell drafted from the author's own
+sentence through the intake door, nothing invented.
 
 **Different Worlds. One Thinker.** — www.iliashossain.site · mail@iliashossain.site · 01701076173

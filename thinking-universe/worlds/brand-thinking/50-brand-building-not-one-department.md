@@ -60,7 +60,7 @@ visual_concepts:
     kind: hero
     purpose: "মূল metaphor—Brand Building ≠ One Department এক দৃশ্যে বোঝানো"
     headline_on_image: "EVERY DEPARTMENT TOUCHES THE BRAND."
-    asset_path: ../../assets/50_brand_is_not_a_department.png
+    asset_path: ../../assets/brand-thinking/50_brand_is_not_a_department.png
     prompt: >-
       Minimal premium flat vector editorial illustration for LinkedIn, 1:1 composition, strong negative space, deep ink black + warm off-white + one muted amber accent, thin rule lines, low text density, subtle grain, no photorealism, no paragraph text, no watermark, sophisticated strategic-branding aesthetic.
       Two halves split by a thin vertical line: LEFT shows the narrow/common version (Brand হলো একটা team-এর দায়িত্ব।) as one small isolated object; RIGHT shows the larger system (DEBT) as a layered isometric cluster of touchpoints.

@@ -4,7 +4,13 @@ This is the **engine**. Copy-paste this file together with `thinking-core/tushar
 
 ---
 
-## 1. Author input (minimum viable)
+## 1. Author input (minimum viable) — three doors, one inbox
+
+```text
+UI         /intake          pick node → write THOUGHT → save
+terminal   npm run intake -- --add --world brand-thinking --thought "…"
+file       thinking-universe/inbox/<world>/2026-10-07-<slug>.md
+```
 
 ```text
 WORLD: Brand Thinking
@@ -84,10 +90,24 @@ Same engine, any world. Nothing about Brand Thinking is special except that it i
 
 ---
 
+## 4a. The per-node loop, as it actually runs
+
+```bash
+npm run intake -- --list                     # what is waiting in every node
+npm run draft                                # pending → shells (structure, never invented beliefs)
+# fill NEEDS_AUTHOR_INPUT in thinking-universe/worlds/<world>/NN-<slug>.md
+npm run check:strict                         # refuses to let a shell pass as finished
+node scripts/link-assets.mjs                 # renders images in assets/<world>/NN_name.png → slot links
+```
+
+A node needs no code to open: create the thought, and `inbox/<world>/` and `worlds/<world>/` appear.
+
 ## 4b. Real commands in this repo (the workflow is no longer theoretical)
 
 ```bash
-npm run dev            # preview at :3000
+npm run dev            # preview at :3000 — /intake is the author's door
+npm run intake -- --add --world marketing-thinking --thought "…"   # add perception to any node
+npm run draft          # inbox entry → Thinking Unit shell
 npm test               # 17 integrity tests on content + links + generator + assets
 npm run check:strict   # publication gate; author gaps become blockers
 # 1) write the thought in data/<world>-units*.mjs

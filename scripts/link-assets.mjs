@@ -33,27 +33,40 @@ function units() {
 const byNumber = new Map();
 for (const u of units()) {
   const m = /^(\d+)-/.exec(u.base);
-  if (m) byNumber.set(Number(m[1]), u);
+  if (m) byNumber.set(`${u.world}#${Number(m[1])}`, u);
 }
 
-const images = fs.existsSync(ASSETS) ? fs.readdirSync(ASSETS).filter((f) => /\.(png|jpe?g|webp|svg)$/i.test(f)) : [];
+const IMG = /\.(png|jpe?g|webp|svg)$/i;
+// images are grouped per world: assets/<world>/<nn>_<slug>.png ; flat files still work (legacy)
+const images = [];
+if (fs.existsSync(ASSETS)) {
+  for (const entry of fs.readdirSync(ASSETS, { withFileTypes: true })) {
+    if (entry.isDirectory()) {
+      for (const f of fs.readdirSync(path.join(ASSETS, entry.name))) {
+        if (IMG.test(f)) images.push({ world: entry.name, name: f, path: path.join(ASSETS, entry.name, f) });
+      }
+    } else if (IMG.test(entry.name)) {
+      images.push({ world: 'brand-thinking', name: entry.name, path: path.join(ASSETS, entry.name) });
+    }
+  }
+}
 let linked = 0;
 
-for (const img of images) {
+for (const { world: imgWorld, name: img } of images) {
   const n = Number(/^(\d+)/.exec(img)?.[1]);
   if (!n) continue;
-  const unit = byNumber.get(n);
+  const unit = byNumber.get(`${imgWorld}#${n}`);
   if (!unit) {
-    console.log(`· ${img} → no unit with concept_number ${n}, skipped`);
+    console.log(`· ${imgWorld}/${img} → no unit ${n} in that world, skipped`);
     continue;
   }
   const kindIdx = KINDS.findIndex((k) => img.toLowerCase().includes(k));
   const slot = kindIdx >= 0 ? kindIdx + 1 : 1;
-  const rel = `../../assets/${img}`;
+  const rel = `../../assets/${imgWorld}/${img}`;
 
   let raw = fs.readFileSync(unit.file, 'utf8');
   if (raw.includes(`asset_path: ${rel}`)) {
-    console.log(`· ${img} → already linked in ${unit.base}`);
+    console.log(`· ${imgWorld}/${img} → already linked in ${unit.base}`);
     continue;
   }
   // insert asset_path right after the slot line of the target visual
@@ -65,7 +78,7 @@ for (const img of images) {
   raw = raw.replace(slotRe, `$1    asset_path: ${rel}\n`);
   fs.writeFileSync(unit.file, raw, 'utf8');
   linked++;
-  console.log(`✓ ${img} → ${unit.base} (slot ${slot})`);
+  console.log(`✓ ${imgWorld}/${img} → ${unit.base} (slot ${slot})`);
 }
 
-console.log(`\n${images.length} rendered asset(s) in assets/, ${linked} newly linked.`);
+console.log(`\n${images.length} rendered asset(s) across ${new Set(images.map((i) => i.world)).size} world folder(s), ${linked} newly linked.`);

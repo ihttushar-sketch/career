@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import ConceptBrowser from '../../../components/ConceptBrowser.jsx';
 import { getWorld, unitsByWorld, loadCore, validateUnits } from '../../../lib/content.mjs';
+import { listInbox } from '../../../lib/intake.mjs';
 
 export const dynamic = 'force-static';
 
@@ -42,6 +43,9 @@ export default async function WorldPage({ params }) {
   const gate = validateUnits(units);
   const full = units.filter((u) => u.__depth === 'full').length;
   const words = units.reduce((s, u) => s + u.__words, 0);
+  const inbox = listInbox({ world });
+  const pending = inbox.filter((e) => e.status === 'pending').length;
+  const drafted = inbox.filter((e) => e.status === 'drafted').length;
   const prompts = units.reduce((s, u) => s + (u.visual_concepts || []).length, 0);
 
   return (
@@ -58,12 +62,21 @@ export default async function WorldPage({ params }) {
           {w.thesis}
         </p>
         {w.intro ? <p className="dim" style={{ maxWidth: '68ch', marginTop: 14, fontSize: 15.5 }}>{w.intro}</p> : null}
-        <div className="hero-stats" style={{ marginTop: 26, gridTemplateColumns: 'repeat(4, minmax(90px, 1fr))' }}>
+        <div className="row" style={{ marginTop: 22, gap: 12 }}>
+          <Link className="btn" href={`/intake?world=${world}`} style={{ padding: '10px 14px' }}>
+            + Add your thinking to this node
+          </Link>
+          <span className="mono dim">
+            inbox: {pending} pending{drafted ? ` · ${drafted} drafted` : ''} — every node fills the same way Brand did
+          </span>
+        </div>
+        <div className="hero-stats" style={{ marginTop: 18, gridTemplateColumns: 'repeat(4, minmax(90px, 1fr))' }}>
           <div className="stat">
             <b>
-              {units.length}/{w.target}
+              {units.length}
+              {units.length > w.target ? `+` : ''}
             </b>
-            <span>concepts filled</span>
+            <span>concepts · {w.target} planned</span>
           </div>
           <div className="stat">
             <b>{full}</b>

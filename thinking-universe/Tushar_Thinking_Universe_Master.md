@@ -1827,7 +1827,9 @@ That last line is the whole remaining phase: the author reads and approves. The 
 ## Commands
 
 ```bash
-npm run dev            # http://localhost:3000
+npm run dev            # http://localhost:3000  ·  /intake is the author's door
+npm run intake -- --add --world marketing-thinking --thought "…"
+npm run draft          # pending inbox entries → unit shells
 npm test               # 17 integrity tests
 npm run check          # publication gate (warns on thin/unsigned)
 npm run check:strict   # same gate, author gaps become blockers
@@ -1839,7 +1841,9 @@ npm run build          # gate + 61 static pages
 ## The one input loop, end to end
 
 ```text
-1. author edits data/brand-thinking-units.*.mjs  (or adds one concept object)
+1. author adds a perception to ANY node  — UI /intake, or:
+   node scripts/intake.mjs --add --world <id> --thought "…"
+   (deep authored batches may still live in data/brand-thinking-units.*.mjs)
 2. npm run content        → worlds/brand-thinking/NN-slug.md
 3. npm run check          → schema + publish rules; fix until 0 errors
 4. render prompts → drop png in thinking-universe/assets/NN_name.png → npm run link-assets
@@ -1854,3 +1858,90 @@ Adding node 02 costs **four steps, zero new code**: add `world_registry` entry i
 extend the generator's world constant → `npm run content && npm run check && npm run build`. The map,
 graph, search, filters and gates pick the new world up automatically because everything is derived
 from files, not hand-wired.
+
+---
+
+# 39. PER-NODE THINKING INTAKE (the author's door)
+
+Everything in §34 assumed one thing: the author must be able to add perception to **any** node, the same way Brand Thinking was filled. That door now exists, and it is the first thing in the workflow, not the last.
+
+## One inbox per node
+
+```ntext
+thinking-universe/inbox/
+├── brand-thinking/          # 50 signed concepts → nothing pending
+├── marketing-thinking/      # 1 drafted shell from the author's own sentence
+├── money-thinking/          # created the moment a thought is saved there
+└── <any future node>/       # no code needed
+```
+
+One file per thought. Minimal format — the author writes only what they think:
+
+```ntext
+---
+world: marketing-thinking
+status: pending
+created: 2026-10-07
+draft: null
+---
+
+THOUGHT:
+মানুষ Product কেনে না—Product দিয়ে নিজের একটা সমস্যা বা পরিচয় সমাধান করে।
+
+OBSERVATION:
+Client বলে 'আমাদের product তো ভালো', তারপরও বিক্রি হয় না।
+
+MY ANGLE / FRAMEWORK:
+PROBLEM → PRODUCT → PERSON → PROOF
+
+WHAT OTHERS GET WRONG:
+ভালো product মানেই বিক্রি হবে।
+```
+
+## Three ways in, one pipeline
+
+| Way | Who uses it | Command / place |
+|---|---|---|
+| **UI form** | everyday use, even from a phone | `/intake` (nav: “+ Add thinking”) → `POST /api/intake` |
+| **Terminal** | author at the repo | `npm run intake -- --add --world <id> --thought "…"` |
+| **Plain file** | anything that can write a file | drop markdown into `inbox/<world>/`, front matter optional keys |
+
+All three land in the same inbox, then:
+
+```ntext
+npm run draft      →  scripts/draft.mjs  →  lib/draft.mjs
+```
+
+## What the drafter may and may not do
+
+**May:** carry the author's sentences verbatim into title/hook/thesis/belief/framework, split an
+arrow chain into steps, order the 12 article sections, attach the node's default hashtags, reserve
+five visual slots, write a provisional title when none was given (flagged `title_provisional: true`).
+
+**May not:** invent a position, an example, a counter-example, a quote, a CTA, a framework. Every one
+of those is written as `NEEDS_AUTHOR_INPUT — <the exact question the author must answer>`.
+
+So a fresh shell is honest: it is structure with holes, visibly marked, never fake depth.
+
+## The gate is tier-aware — that is what makes the loop safe
+
+| Unit status | What the gate checks | Effect |
+|---|---|---|
+| `idea` / `draft` | identity only: ids, world, number, title, hook, valid keys | work in progress is never blocked |
+| `approved` / `published`, or `--strict` | the full contract: 12 article sections, 4–5 visuals with renderable prompts, 3–5 hashtags, ≥2 cross-links, headline discipline, **zero** `NEEDS_AUTHOR_INPUT` | a shell can never publish itself |
+
+Run it: `npm run check` (day-to-day) · `npm run check:strict` (before shipping a node).
+
+## Two things the node does not do
+
+1. It does not treat 50 as a ceiling. `concept_number` is per node and unlimited — Brand Thinking
+   already grew to 51 when a thought arrived after the plan was full.
+2. It does not move an asset between nodes. Images live in `assets/<world_id>/` and the linker keys on
+   **world + number**, so node 02's concept 01 can never inherit node 01's hero image (a bug that test
+   11 now catches).
+
+## Current intake state
+
+* Brand Thinking — 50 approved, inbox empty, phase 07 = author sign-off (`reviewed_by`)
+* Marketing Thinking — **seeded**: 1 shell from the author's own sentence, 49 slots open
+* every other node — inbox open, waiting

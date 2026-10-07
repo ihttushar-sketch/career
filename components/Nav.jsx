@@ -5,6 +5,7 @@ const LINKS = [
   { href: '/worlds', label: 'Worlds' },
   { href: '/frameworks', label: 'Frameworks' },
   { href: '/graph', label: 'Graph' },
+  { href: '/intake', label: '+ Add thinking' },
   { href: '/about', label: 'About' },
 ];
 
