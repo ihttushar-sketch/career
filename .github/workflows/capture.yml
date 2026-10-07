@@ -28,11 +28,13 @@ jobs:
       - name: Resolve which branch holds the universe
         id: branch
         run: |
+          # order matters: an explicit override, then the default branch (where the universe now
+          # lives after PR #1), and only as a fallback a session branch like arena/*
           BR="${{ vars.THINKING_BRANCH }}"
+          if [ -z "$BR" ]; then BR="${{ github.event.repository.default_branch }}"; fi
           if [ -z "$BR" ]; then
             BR=$(gh api "repos/$GITHUB_REPOSITORY/branches" --paginate -q '.[].name' | grep -m1 'arena/' || true)
           fi
-          if [ -z "$BR" ]; then BR="${{ github.event.repository.default_branch }}"; fi
           echo "name=$BR" >> "$GITHUB_OUTPUT"
           echo "filing into $BR"
 

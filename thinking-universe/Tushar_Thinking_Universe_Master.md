@@ -2112,10 +2112,10 @@ B. GitHub issue      Issues → New → "Capture — throw a thought into the un
 C. message me        a line in chat is enough; I file it in the same inbox format.
 ```
 
-**One setup step:** GitHub runs `on: issues` workflows from the *default* branch. So this path turns on the
-day these files are merged into `main`. Until then, path C (a line in chat) and path A (a running dev server)
-both work. If the universe should keep living on a working branch, set the repo variable `THINKING_BRANCH` and
-the Action files into that branch.
+**Where it files:** GitHub runs `on: issues` workflows from the *default* branch, so this path is live now
+that PR #1 is merged. The Action picks the branch in this order — `THINKING_BRANCH` repo variable (only set it
+if the universe must keep living on a working branch) → the default branch → fallback: the first `arena/*`
+branch. Everything it writes is an inbox capture plus a draft PR; it never touches approved content.
 
 Why a PR and not a direct commit: your own rule — `THINK → DRAFT → APPROVE → PUBLISH`. A phone capture
 is THINK; CI drafting it is DRAFT; the merge click is APPROVE; the site build is PUBLISH. Automating the
