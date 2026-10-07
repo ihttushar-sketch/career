@@ -1,0 +1,61 @@
+date: 2026-10-07
+owner: Md Ilias Hossain Tushar
+# আজকের দিনের লগ — আপনার দেওয়া ইনপুট হুবহু, আর সেখান থেকে যা তৈরি হলো।
+# এই .yaml-টাই source; পাশের .md টি `npm run day` দিয়ে regenerate হয়।
+# কোনো belief এখানে বানানো হয়নি — শুধু আপনার বাক্য, আর যেখানে সেটা পড়েছে সেই পথ।
+
+requests:
+  - text: "each node e brand er moto amr perception add korar option must thakte hobe then baki agabe"
+    became: intake layer — lib/intake.mjs, lib/draft.mjs, /intake, POST /api/intake, npm run intake|draft
+    status: done
+  - text: "main node ami, tar vitor thinking + researched cases, Business areas, emon aro kisu… etar asole babohar best way ki j ami jkono somoi percepton dibo, add hoa jabe"
+    became: four shelves around one main node — lib/lane.mjs, /triage, /cases, /business, master doc §40
+    status: done
+  - text: "ekn thinking er node tar sob gulo ready korte hobe"
+    became: lib/plan.mjs + npm run plan — 12 nodes × 50 slots, five states each, graph demand as priority (master §41)
+    status: done
+  - text: "r pc sarao ami kivabe ei project e amr concept add korte parbo"
+    became: /quick (phone browser) + GitHub capture issue + .github/workflows/capture.yml → PR; message-the-agent path
+    status: built — phone issue path activates on the default branch (PR merge er por)
+  - text: "ami clear na"
+    became: "no jargon answer — one action for the author: drop a line, the system files it"
+    status: note
+
+perceptions:
+  - lane: thinking
+    node: marketing-thinking
+    thought: "মানুষ Product কেনে না—Product দিয়ে নিজের একটা সমস্যা বা পরিচয় সমাধান করে।"
+    observation: "Client বলে 'আমাদের product তো ভালো', তারপরও বিক্রি হয় না।"
+    angle: "PROBLEM → PRODUCT → PERSON → PROOF"
+    wrong: "ভালো product মানেই বিক্রি হবে।"
+    title: "Product ≠ Purchase"
+    hook: "মানুষ product কেনে না। সে নিজের অভাব কেনে।"
+    drafted: worlds/marketing-thinking/01-product-purchase.md
+    gaps_open: 16
+    note: এই বাক্যগুলো আজকের নয় — আপনার আগের কথোপকথন থেকে নেওয়া, আজ প্রথমবার ফাইলে বসেছে
+  - lane: note
+    node: marketing-thinking
+    thought: "Meeting-এ বারবার একই বাক্য: “আমাদের product তো ভালো, বিক্রি কেন না?”"
+    drafted: worlds/marketing-thinking/02-meeting-product.md
+    gaps_open: 16
+    note: note shelf-এ পড়েছিল → /triage-এ thinking/marketing-thinking এ confirm করা হয়েছে
+
+agent_supplied_demos:
+  - kind: business card
+    file: business/01-brand-strategy-retainer.md
+    text_used: "৫–৫০ লোকের company যাদের marketing team নেই, owner নেই · একজন decision owner থাকলে সব touchpoint এক voice-এ কথা বলে"
+    warning: গঠন দেখানোর জন্য; আপনার offer/pricing/proof — এই তিনটা আপনার উত্তর, না মিললে মুছে দিন
+  - kind: case card
+    file: research/cases/01-bd-sme-brands-pattern-to-research.md
+    text_used: "BD SME brand গুলোতে দেখেছি: rebrand-এর পরও perception নড়ে না, কারণ experience আগের মতোই থাকে"
+    warning: সংখ্যা ও source NEEDS_AUTHOR_INPUT — এই কার্ড কোনো concept-এ cite হতে পারবে না যত না প্রমাণ বসে
+
+before:
+  ref: d7a44e7
+  label: আজকের intake-কার্য শুরুর মুহূর্ত
+
+still_yours:
+  - Brand Thinking-এর ৫০টা concept-এ reviewed_by স্বাক্ষর বাকি (status approved হলেও)
+  - thinking-core/ এ ৭টা ঘর NEEDS_AUTHOR_INPUT (definitions, analogies, stories, sales-position)
+  - marketing-thinking: ২টা shell-এ মোট ৩২টা gap
+  - ১১টা node-এর ৫৪৮টা slot এখনও খালি (প্রশ্ন সেড আছে, উত্তর নেই)

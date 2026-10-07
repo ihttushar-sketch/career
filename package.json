@@ -16,7 +16,8 @@
     "link-assets": "node scripts/link-assets.mjs",
     "intake": "node scripts/intake.mjs",
     "draft": "node scripts/draft.mjs",
-    "plan": "node scripts/open-node.mjs --all"
+    "plan": "node scripts/open-node.mjs --all",
+    "day": "node scripts/day-log.mjs"
   },
   "dependencies": {
     "gray-matter": "^4.0.3",
